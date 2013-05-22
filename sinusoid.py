@@ -44,21 +44,13 @@ class SinusoidModel(object):
             self._fit_parameters = amp_phase
 
     def __repr__(self):
-        #separator = "\t\t"
         default_format = "{:^{width}}{:^{width}}{:^{width}}{:^{width}}"
         width = 20
-        #output = [separator.join(["Mode","Frequency","Amplitude","Phase"])]
         output = [default_format.format("Mode","Frequency","Amplitude","Phase", width=width)]
         dashes = (width-4)*"-"
         output.append(default_format.format(dashes, dashes, dashes, dashes, width=width))
-        #DC = separator.join(["DC", "--",str(self.dc_offset),"--"])
         DC = default_format.format("DC", "--",self.dc_offset,"--", width=width)
         output.append(DC)
-        # sinusoids = [separator.join([self._pretty_mode(mode),
-        #                             str(sinusoid.frequency),
-        #                             str(sinusoid.amplitude),
-        #                             str(sinusoid.phase)])
-        #              for mode, sinusoid in zip(self.modes, self._sinusoids)]
         sinusoids = [default_format.format(self._pretty_mode(mode),
                                            sinusoid.frequency,
                                            sinusoid.amplitude,
@@ -138,23 +130,17 @@ class SinusoidModel(object):
     def fit_to_data(self, time, data, initial_parameters=[]):
         from scipy import optimize
 
-        #data_mean = data.mean()
-        fit_data = data #- data_mean
         if not initial_parameters:
             initial_parameters = 0 * np.array(self._fit_parameters) + 1.
 
-        #initial_parameters = np.insert(initial_parameters, 0, 1.)
-        print initial_parameters
         self._fit_parameters = initial_parameters
-        #self.dc_offset = initial_parameters[0]
-        print self._fit_parameters
 
         def errfunc(p, model, t, dat):
             model._fit_parameters = p
             return model.value(t) - dat
 
         params, junk = optimize.leastsq(errfunc, initial_parameters,
-                                        args=(self, time, fit_data))
+                                        args=(self, time, data))
 
         self._fit_parameters = params
 
