@@ -74,7 +74,7 @@ class SinusoidModel(object):
         """
         mode_str = []
         for freq_num, weight in enumerate(mode):
-            if weight>0:
+            if weight != 0:
                 if weight == 1:
                     mode_str.append("+f{}".format(freq_num))
                 elif weight == -1:
@@ -110,7 +110,7 @@ class SinusoidModel(object):
 
     @property
     def _fit_parameters(self):
-        p = []
+        p = [self.dc_offset]
         for sinusoid in self._sinusoids:
             p.append(sinusoid.amplitude)
             p.append(sinusoid.phase)
@@ -118,11 +118,13 @@ class SinusoidModel(object):
 
     @_fit_parameters.setter
     def _fit_parameters(self, p):
-        if  (len(p) % 2) == 1:
+        self.dc_offset = p[0]
+        sines = p[1:]
+        if  (len(sines) % 2) == 1:
             raise ValueError('Must supply an even number of fit parameters')
-        for i in range(len(p) / 2):
-            self._sinusoids[i].amplitude = p[2*i]
-            self._sinusoids[i].phase = p[2*i+1]
+        for i in range(len(sines) / 2):
+            self._sinusoids[i].amplitude = sines[2*i]
+            self._sinusoids[i].phase = sines[2*i+1]
 
     def value(self, t):
         v = 0
@@ -141,22 +143,20 @@ class SinusoidModel(object):
         if not initial_parameters:
             initial_parameters = 0 * np.array(self._fit_parameters) + 1.
 
-        initial_parameters = np.insert(initial_parameters, 0, 1.)
-
-        self._fit_parameters = initial_parameters[1:]
-        self.dc_offset = initial_parameters[0]
+        #initial_parameters = np.insert(initial_parameters, 0, 1.)
+        print initial_parameters
+        self._fit_parameters = initial_parameters
+        #self.dc_offset = initial_parameters[0]
         print self._fit_parameters
 
         def errfunc(p, model, t, dat):
-            model._fit_parameters = p[1:]
-            model.dc_offset = p[0]
+            model._fit_parameters = p
             return model.value(t) - dat
 
         params, junk = optimize.leastsq(errfunc, initial_parameters,
                                         args=(self, time, fit_data))
 
-        self._fit_parameters = params[1:]
-        self.dc_offset = params[0]
+        self._fit_parameters = params
 
         for sinusoid in self._sinusoids:
             if sinusoid.amplitude < 0:
