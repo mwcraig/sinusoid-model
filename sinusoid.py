@@ -30,7 +30,7 @@ class SinusoidModel(object):
     >>> model.frequencies =[f1, f2, f3] # "base" frequencies -- NOT angular
     >>> model.modes = [[1,0,0],     # first mode has frequency f1;
                         [1, 0, 2]]  # second mode has frequency f1 + 2*f2
-    >>> model.fit_parameters = [0.5, 1.,  # 1st mode amplitude 0.5, phase 1 rad
+    >>> model._fit_parameters = [0.5, 1.,  # 1st mode amplitude 0.5, phase 1 rad
                                 1.0, 0]   # 2nd mode amplitude 1.0, phase 0 rad
     """
     def __init__(self, frequencies=[], modes=[], amp_phase=[]):
@@ -41,7 +41,7 @@ class SinusoidModel(object):
         self.modes = modes
         self.dc_offset = 0
         if amp_phase:
-            self.fit_parameters = amp_phase
+            self._fit_parameters = amp_phase
 
     def __repr__(self):
         #separator = "\t\t"
@@ -109,15 +109,15 @@ class SinusoidModel(object):
             self._modes.append(mode)
 
     @property
-    def fit_parameters(self):
+    def _fit_parameters(self):
         p = []
         for sinusoid in self._sinusoids:
             p.append(sinusoid.amplitude)
             p.append(sinusoid.phase)
         return p
 
-    @fit_parameters.setter
-    def fit_parameters(self, p):
+    @_fit_parameters.setter
+    def _fit_parameters(self, p):
         if  (len(p) % 2) == 1:
             raise ValueError('Must supply an even number of fit parameters')
         for i in range(len(p) / 2):
@@ -139,23 +139,23 @@ class SinusoidModel(object):
         #data_mean = data.mean()
         fit_data = data #- data_mean
         if not initial_parameters:
-            initial_parameters = 0 * np.array(self.fit_parameters) + 1.
+            initial_parameters = 0 * np.array(self._fit_parameters) + 1.
 
         initial_parameters = np.insert(initial_parameters, 0, 1.)
 
-        self.fit_parameters = initial_parameters[1:]
+        self._fit_parameters = initial_parameters[1:]
         self.dc_offset = initial_parameters[0]
-        print self.fit_parameters
+        print self._fit_parameters
 
         def errfunc(p, model, t, dat):
-            model.fit_parameters = p[1:]
+            model._fit_parameters = p[1:]
             model.dc_offset = p[0]
             return model.value(t) - dat
 
         params, junk = optimize.leastsq(errfunc, initial_parameters,
                                         args=(self, time, fit_data))
 
-        self.fit_parameters = params[1:]
+        self._fit_parameters = params[1:]
         self.dc_offset = params[0]
 
         for sinusoid in self._sinusoids:
