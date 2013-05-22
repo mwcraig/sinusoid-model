@@ -60,6 +60,15 @@ class SinusoidModel(object):
         output.extend(sinusoids)
         return "\n".join(output)
 
+    def __call__(self, t):
+        v = 0
+        for sinusoid in self._sinusoids:
+            v += sinusoid.value(t)
+
+        v += self.dc_offset
+
+        return v
+
     def _pretty_mode(self, mode):
         """
         Generate nice looking string for mode
