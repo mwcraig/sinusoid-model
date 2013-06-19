@@ -2,6 +2,27 @@ import numpy as np
 
 
 class Sinusoid(object):
+    """
+    A single sinusoid.
+
+    The sinusoid is of the form: $A\sin(2\pi f t + \delta)$, where $A$ is the
+    amplitude, $f$ is the frequency (*not* the angular frequency) and
+    $\delta$ is the phase.
+
+    Parameters
+    ----------
+    frequency : float
+        Frequency (*not* angular frequency) of the sinusoid.
+    amplitude : float
+        Semi-amplitude of the sinusoid.
+    delta : float
+        Phase of the sinusoid (radians).
+
+    Attributes
+    ----------
+    angular_frequency : float
+        Angular frequency of the sinusoid.
+    """
     def __init__(self, frequency, amplitude, phase):
         self.amplitude = amplitude
         self.phase = phase
