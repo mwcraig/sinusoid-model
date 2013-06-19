@@ -33,7 +33,7 @@ class Sinusoid(object):
         return "{} sin(2pi {} t + {})".format(self.amplitude,
                                               self.frequency, self.phase)
 
-    def value(self, t):
+    def __call__(self, t):
         return self.amplitude * np.sin(self.angular_frequency * t + self.phase)
 
 
@@ -87,7 +87,7 @@ class SinusoidModel(object):
     def __call__(self, t):
         v = 0
         for sinusoid in self._sinusoids:
-            v += sinusoid.value(t)
+            v += sinusoid(t)
 
         v += self.dc_offset
 
@@ -155,7 +155,7 @@ class SinusoidModel(object):
     def value(self, t):
         v = 0
         for sinusoid in self._sinusoids:
-            v += sinusoid.value(t)
+            v += sinusoid(t)
 
         v += self.dc_offset
 
