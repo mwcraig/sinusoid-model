@@ -47,11 +47,11 @@ class SinusoidModel(object):
     >>> model = SinusoidModel()
     >>> f1 = 1.1    #  frequency, NOT angular frequency
     >>> f2 = 1.7
-    >>> f3 = 3.5 
+    >>> f3 = 3.5
     >>> model.frequencies =[f1, f2, f3] # "base" frequencies -- NOT angular
     >>> model.modes = [[1,0,0],     # first mode has frequency f1;
                         [1, 0, 2]]  # second mode has frequency f1 + 2*f2
-    >>> model._fit_parameters = [0.5, 1.,  # 1st mode amplitude 0.5, phase 1 rad
+    >>> model._fit_parameters = [0.5, 1., # 1st mode amplitude 0.5, phase 1 rad
                                 1.0, 0]   # 2nd mode amplitude 1.0, phase 0 rad
     """
     def __init__(self, frequencies=[], modes=[], amp_phase=[]):
@@ -67,10 +67,13 @@ class SinusoidModel(object):
     def __repr__(self):
         default_format = "{:^{width}}{:^{width}}{:^{width}}{:^{width}}"
         width = 20
-        output = [default_format.format("Mode","Frequency","Amplitude","Phase", width=width)]
-        dashes = (width-4)*"-"
-        output.append(default_format.format(dashes, dashes, dashes, dashes, width=width))
-        DC = default_format.format("DC", "--",self.dc_offset,"--", width=width)
+        output = [default_format.format("Mode", "Frequency", "Amplitude",
+                                        "Phase", width=width)]
+        dashes = (width - 4) * "-"
+        output.append(default_format.format(dashes, dashes, dashes, dashes,
+                                            width=width))
+        DC = default_format.format("DC", "--", self.dc_offset,
+                                   "--", width=width)
         output.append(DC)
         sinusoids = [default_format.format(self._pretty_mode(mode),
                                            sinusoid.frequency,
@@ -123,7 +126,8 @@ class SinusoidModel(object):
         self._sinusoids = []
         for mode in mode_list:
             if len(mode) != len(self.frequencies):
-                raise ValueError('Wrong number of modes in mode setter in mode {}'.format(mode))
+                raise ValueError('Wrong number of modes in mode setter' +
+                                 ' for mode {}'.format(mode))
             frequency = (np.array(self.frequencies) * np.array(mode)).sum()
             if not (frequency > 0):
                 raise ValueError('Zero frequency mode given.')
@@ -145,8 +149,8 @@ class SinusoidModel(object):
         if  (len(sines) % 2) == 1:
             raise ValueError('Must supply an even number of fit parameters')
         for i in range(len(sines) / 2):
-            self._sinusoids[i].amplitude = sines[2*i]
-            self._sinusoids[i].phase = sines[2*i+1]
+            self._sinusoids[i].amplitude = sines[2 * i]
+            self._sinusoids[i].phase = sines[2 * i + 1]
 
     def value(self, t):
         v = 0
@@ -179,11 +183,8 @@ class SinusoidModel(object):
                 sinusoid.amplitude *= -1
                 sinusoid.phase += np.pi
 
-            while sinusoid.phase > 2*np.pi:
-                sinusoid.phase -= 2*np.pi
+            while sinusoid.phase > 2 * np.pi:
+                sinusoid.phase -= 2 * np.pi
 
             while sinusoid.phase < 0:
-                sinusoid.phase += 2*np.pi
-
-
-
+                sinusoid.phase += 2 * np.pi
