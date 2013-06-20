@@ -54,12 +54,10 @@ class SinusoidModel(object):
     >>> model._fit_parameters = [0.5, 1., # 1st mode amplitude 0.5, phase 1 rad
                                 1.0, 0]   # 2nd mode amplitude 1.0, phase 0 rad
     """
-    def __init__(self, frequencies=[], modes=[], amp_phase=[]):
+    def __init__(self, frequencies=None, modes=None, amp_phase=None):
         self._sinusoids = []
-        self._frequencies = []
-        self.frequencies = frequencies
-        self._modes = []
-        self.modes = modes
+        self.frequencies = (frequencies or [])
+        self.modes = (modes or [])
         self.dc_offset = 0
         if amp_phase:
             self._fit_parameters = amp_phase
