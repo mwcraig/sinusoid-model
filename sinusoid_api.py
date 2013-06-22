@@ -4,9 +4,7 @@
 
 # 1. when you create the model
 
->>> a_model = SinusoidModel(frequencies=[1.2, 2.3],
-                        modes=[[1, 0], [0, 1], [1, 1]]
-                        )
+>>> a_model = SinusoidModel(frequencies=[1.2, 2.3], modes=[[1, 0], [0, 1], [1, 1]])
 
 # note that each mode is a list (or a tuple or a numpy array) with two
 # elements, one for each frequency.
@@ -21,8 +19,9 @@
 # The number of components of each mode must match the number of 
 # frequencies:
 
->>> bad_model = SinusoidModel(frequencies=[1.2, 2.3],
-                              modes=[[1, 0, 0]])
+>>> bad_model = SinusoidModel(frequencies=[1.2, 2.3], modes=[[1, 0, 0]])
+Traceback (most recent call last):
+    ...
 ValueError: Wrong number of modes in mode setter for mode [1, 0, 0]
 
 # 2. After you create the model by adding frequencies and modes
@@ -33,6 +32,12 @@ ValueError: Wrong number of modes in mode setter for mode [1, 0, 0]
 (1.2, 2.3)
 >>> another_model.modes
 ()
+>>> another_model.add_mode(1, 0)  # add modes one at a time, or...
+>>> another_model.modes
+((1, 0),)
+>>> another_model.add_mode([0, 1], [1, 1])  # several at a time
+>>> another_model.modes
+((1, 0), (0, 1), (1, 1))
 
 # 3. Create a new model using another model as initializer
 
