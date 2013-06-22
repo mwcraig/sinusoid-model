@@ -117,6 +117,22 @@ class SinusoidModel(object):
         except TypeError:
             self._frequencies = (freq)
 
+    def add_frequency(self, *frequencies):
+        """
+        Add one or more frequencies to model
+
+        Parameters
+        ----------
+
+        frequencies : float
+            One or more frequencies to be appended to the model
+
+        """
+        all_frequencies = list(self.frequencies)
+        for frequency in frequencies:
+            all_frequencies.append(frequency)
+        self.frequencies = all_frequencies
+
     @property
     def modes(self):
         return self._modes
@@ -135,22 +151,6 @@ class SinusoidModel(object):
             self._sinusoids.append(Sinusoid(frequency, 0., 0.))
             self._modes.append(tuple(mode))
         self._modes = tuple(self._modes)
-
-    def add_frequency(self, *frequencies):
-        """
-        Add one or more frequencies to model
-
-        Parameters
-        ----------
-
-        frequencies : float
-            One or more frequencies to be appended to the model
-
-        """
-        all_frequencies = list(self.frequencies)
-        for frequency in frequencies:
-            all_frequencies.append(frequency)
-        self.frequencies = all_frequencies
 
     @property
     def _fit_parameters(self):
