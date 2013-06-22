@@ -58,3 +58,9 @@ class TestSinusoidalModel(object):
         with pytest.raises(ValueError):
             bad_model = sinusoid.SinusoidModel(frequencies=self.double_mode['freq'],
                                                modes=[[1, 0, 0 ]])
+
+    def test_add_frequency_to_empty_model(self):
+        empty_model = sinusoid.SinusoidModel()
+        empty_model.add_frequency(self.double_mode['freq'][0],
+                                  self.double_mode['freq'][1])
+        assert empty_model.frequencies == tuple(self.double_mode['freq'])

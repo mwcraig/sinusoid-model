@@ -28,11 +28,11 @@ ValueError: Wrong number of modes in mode setter for mode [1, 0, 0]
 # 2. After you create the model by adding frequencies and modes
 
 >>> another_model = SinusoidModel()
-
 >>> another_model.add_frequency(1.2, 2.3)
-
 >>> another_model.frequencies
 (1.2, 2.3)
+>>> another_model.modes
+()
 
 # 3. Create a new model using another model as initializer
 
