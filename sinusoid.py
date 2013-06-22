@@ -137,6 +137,16 @@ class SinusoidModel(object):
         self._modes = tuple(self._modes)
 
     def add_frequency(self, *frequencies):
+        """
+        Add one or more frequencies to model
+
+        Parameters
+        ----------
+
+        frequencies : float
+            One or more frequencies to be appended to the model
+
+        """
         all_frequencies = list(self.frequencies)
         for frequency in frequencies:
             all_frequencies.append(frequency)
