@@ -34,14 +34,27 @@ class TestSinusoidalModel(object):
         self.f1 = 2.1
         self.ampl = 1.4
         self.phase = 0
-
+        self.double_mode = {'freq': [1.2, 2.3],
+                            'modes':[[1, 0], [0, 1], [1, 1]]}
+        self.double_model = sinusoid.SinusoidModel(frequencies=self.double_mode['freq'],
+                                       modes=self.double_mode['modes'])
 # Then...
 #   + Change all things that are currently lists to immutable tuples
 #   + Add tests for immutability of frequencies, modes
 #   + Add method for adding frequency that returns new instance.
 #   + Add method for adding new mode that returns new instance.
 #   + Add method for calculating "mode" frequencies.
+    def test_frequencies_are_immutable(self):
+        assert self.double_model.frequencies == tuple(self.double_mode['freq'])
 
     def test_modes_are_immutable(self):
         ## make sure it is impossible to change mode defitions.
-        pass
+        model = sinusoid.SinusoidModel(frequencies=self.double_mode['freq'],
+                                       modes=self.double_mode['modes'])
+        expected_modes = tuple([tuple(mode) for mode in self.double_mode['modes']])
+        assert (model.modes == expected_modes)
+
+    def test_number_modes_matches_frequencies(self):
+        with pytest.raises(ValueError):
+            bad_model = sinusoid.SinusoidModel(frequencies=self.double_mode['freq'],
+                                               modes=[[1, 0, 0 ]])

@@ -112,7 +112,10 @@ class SinusoidModel(object):
 
     @frequencies.setter
     def frequencies(self, freq):
-        self._frequencies = [f for f in freq]
+        try:
+            self._frequencies = tuple([f for f in freq])
+        except TypeError:
+            self._frequencies = (freq)
 
     @property
     def modes(self):
@@ -130,7 +133,8 @@ class SinusoidModel(object):
             if not (frequency > 0):
                 raise ValueError('Zero frequency mode given.')
             self._sinusoids.append(Sinusoid(frequency, 0., 0.))
-            self._modes.append(mode)
+            self._modes.append(tuple(mode))
+        self._modes = tuple(self._modes)
 
     @property
     def _fit_parameters(self):
