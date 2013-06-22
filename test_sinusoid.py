@@ -35,15 +35,17 @@ class TestSinusoidalModel(object):
         self.ampl = 1.4
         self.phase = 0
         self.double_mode = {'freq': [1.2, 2.3],
-                            'modes':[[1, 0], [0, 1], [1, 1]]}
+                            'modes': [[1, 0], [0, 1], [1, 1]]}
         self.double_model = sinusoid.SinusoidModel(frequencies=self.double_mode['freq'],
-                                       modes=self.double_mode['modes'])
+                                                   modes=self.double_mode['modes'])
+        self.expected_modes = tuple([tuple(mode) for mode in self.double_mode['modes']])
 # Then...
 #   + Change all things that are currently lists to immutable tuples
 #   + Add tests for immutability of frequencies, modes
 #   + Add method for adding frequency that returns new instance.
 #   + Add method for adding new mode that returns new instance.
 #   + Add method for calculating "mode" frequencies.
+
     def test_frequencies_are_immutable(self):
         assert self.double_model.frequencies == tuple(self.double_mode['freq'])
 
@@ -51,16 +53,33 @@ class TestSinusoidalModel(object):
         ## make sure it is impossible to change mode defitions.
         model = sinusoid.SinusoidModel(frequencies=self.double_mode['freq'],
                                        modes=self.double_mode['modes'])
-        expected_modes = tuple([tuple(mode) for mode in self.double_mode['modes']])
-        assert (model.modes == expected_modes)
+        
+        assert (model.modes == self.expected_modes)
 
     def test_number_modes_matches_frequencies(self):
         with pytest.raises(ValueError):
             bad_model = sinusoid.SinusoidModel(frequencies=self.double_mode['freq'],
-                                               modes=[[1, 0, 0 ]])
+                                               modes=[[1, 0, 0]])
 
     def test_add_frequency_to_empty_model(self):
         empty_model = sinusoid.SinusoidModel()
         empty_model.add_frequency(self.double_mode['freq'][0],
                                   self.double_mode['freq'][1])
         assert empty_model.frequencies == tuple(self.double_mode['freq'])
+
+    def test_add_single_mode_to_empty_model(self):
+        empty_model = sinusoid.SinusoidModel()
+        empty_model.add_frequency(self.double_mode['freq'][0],
+                                  self.double_mode['freq'][1])
+        first_mode = self.double_mode['modes'][0]
+        empty_model.add_mode(first_mode[0], first_mode[1])
+        assert (empty_model.modes[0] == tuple(first_mode))
+
+    def test_add_several_modes_to_empty_model(self):
+        empty_model = sinusoid.SinusoidModel()
+        empty_model.add_frequency(self.double_mode['freq'][0],
+                                  self.double_mode['freq'][1])
+        modes = self.double_mode['modes']
+        empty_model.add_mode(modes[0], modes[1], modes[2])
+        print empty_model.modes
+        assert (empty_model.modes == self.expected_modes)

@@ -152,6 +152,47 @@ class SinusoidModel(object):
             self._modes.append(tuple(mode))
         self._modes = tuple(self._modes)
 
+    def add_mode(self, *mode_description):
+        """
+        Add one or more modes to current model.
+
+        Parameters
+        ----------
+
+        mode : floats or lists
+            Two types of input are allowed, either a series of floats, one
+            for each frequency in the model, or a series of lists, each of
+            which defines a mode.
+
+        The example below illustrates the two methods of calling `add_mode`.
+
+        >>> from sinusoid import SinusoidModel
+        >>> another_model = SinusoidModel()
+        >>> another_model.add_frequency(1.2, 2.3)
+
+        Add modes one at a time:
+
+        >>> another_model.add_mode(1, 0)
+        >>> another_model.modes
+        ((1,0))
+
+        Add two modes at once:
+        >>> another_model.add_mode([0, 1], [1, 1])
+        ((1,0), (0, 1), (1, 1))
+
+        """
+        modes_to_add = []
+        for mode in mode_description:
+            modes_to_add.append(mode)
+
+        try:
+            modes_to_add[0][0]
+        except TypeError:
+            modes_to_add = [modes_to_add]
+        new_mode_list = list(self.modes)
+        new_mode_list.extend(modes_to_add)
+        self.modes = new_mode_list
+
     @property
     def _fit_parameters(self):
         p = [self.dc_offset]
