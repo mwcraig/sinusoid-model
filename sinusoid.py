@@ -174,11 +174,11 @@ class SinusoidModel(object):
 
         >>> another_model.add_mode(1, 0)
         >>> another_model.modes
-        ((1,0))
+        ((1, 0), )
 
         Add two modes at once:
         >>> another_model.add_mode([0, 1], [1, 1])
-        ((1,0), (0, 1), (1, 1))
+        ((1, 0), (0, 1), (1, 1))
 
         """
         modes_to_add = []
