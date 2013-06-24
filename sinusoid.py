@@ -129,8 +129,7 @@ class SinusoidModel(object):
 
         """
         all_frequencies = list(self.frequencies)
-        for frequency in frequencies:
-            all_frequencies.append(frequency)
+        all_frequencies.extend(frequencies)
         self.frequencies = all_frequencies
 
     @property
