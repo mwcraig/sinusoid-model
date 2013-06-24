@@ -41,7 +41,10 @@ ValueError: Wrong number of modes in mode setter for mode [1, 0, 0]
 
 # 3. Create a new model using another model as initializer
 
->>> a_model_extended = SinusoidModel(a_model)
+>>> import copy
+>>> a_model_extended = copy.deepcopy(a_model)
+
+# Changing a model
 
 >>> a_model_extended.add_frequency(3.4)
 
