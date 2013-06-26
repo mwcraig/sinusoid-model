@@ -56,6 +56,8 @@ class SinusoidModel(object):
     """
     def __init__(self, frequencies=None, modes=None, amp_phase=None):
         self._sinusoids = []
+        self._frequencies = ()
+        self._modes = ()
         self.frequencies = (frequencies or [])
         self.modes = (modes or [])
         self.dc_offset = 0
@@ -112,6 +114,16 @@ class SinusoidModel(object):
 
     @frequencies.setter
     def frequencies(self, freq):
+        n_new_frequencies = len(freq)
+        n_current_frequencies = len(self.frequencies)
+
+        if (n_new_frequencies < n_current_frequencies):
+            raise ValueError("Cannot decrease number of frequencies. Define a new model instead.")
+
+        if ((n_current_frequencies > 0) and
+            (n_new_frequencies > n_current_frequencies)):
+            raise ValueError("Use method add_frequency to increase the number of frequencies")
+
         try:
             self._frequencies = tuple([f for f in freq])
         except TypeError:
@@ -140,7 +152,7 @@ class SinusoidModel(object):
 
         zeros = [0 for frequency in frequencies]
         modes = []
-        self.frequencies = all_frequencies
+        self._frequencies = tuple(all_frequencies)
         for mode in self.modes:
             new_mode = list(mode)
             new_mode.extend(zeros)
@@ -155,7 +167,8 @@ class SinusoidModel(object):
     def modes(self, mode_list):
         self._modes = []
         self._sinusoids = []
-        for mode in mode_list:
+
+        for mode in (mode_list or ()):
             if len(mode) != len(self.frequencies):
                 raise ValueError('Wrong number of modes in mode setter' +
                                  ' for mode {}'.format(mode))

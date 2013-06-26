@@ -63,49 +63,29 @@ ValueError: Wrong number of modes in mode setter for mode [1, 0, 0]
 >>> a_model_extended.modes
 ()
 
-# TThere is similar behavior if you set the frequencies directly:
-# If there is an unambiguous way to generate additional modes with zero,
-# or if the number of frequencies doesn't change, then the frequencies
-# are updated and the modes unchanged.
+# 
+# Note that you can change the values of the frequencies by simply
+# setting the frequency:
 #
 
->>> a_model_extended = SinusoidModel(a_model)
+>>> a_model_extended = copy.deepcopy(a_model)
 >>> a_model_extended.frequencies
 (1.2, 2.3)
+>>> a_model_extended.frequencies = (7.8, 3.5)
+>>> a_model_extended.frequencies
+(7.8, 3.5)
 
-# note that in addition to adding a frequency, I've changed the value
-# of another.
->>> a_model_extended.frequencies = [1.1, 2.3, 3.4]
-
->>> a_model_extended.modes
-((1, 0, 0), (0, 1, 0), (1, 1, 0))
-
-
-# If the number of frequencies set is inconsistent with the number of
-# components in each mode then an error is generated.
-# For example, if a model has three frequencies and modes defined, and one of
-# the frequencies is removed an error is generated.
+# You CANNOT change the number of frequencies by setting the frequency 
+# property--you must use add_frequency to increase the number of frequencies;
+# to decrease the number of frequencies you must define a new model.
 #
 
->>> a_model_extended.frequencies = [1.1, 2.3]
-ValueError: Number of mode components (3) does not match new number of
-#   frequencies. Try first setting modes to None and then change the
-#   frequencies.
+>>> a_model_extended.frequencies = [1.1, 2.3, 4.5]
+Traceback (most recent call last):
+    ...
+ValueError: Use method add_frequency to increase the number of frequencies
 
->>> a_model_extended.modes = None
-
->>> a_model_extended.frequencies = [1.1, 2.3]
-
->>> a_model_extended.frequencies
-(1.1, 2.3)
-
-# To avoid the error, first set the modes to None then change the frequencies.
-# Regardless of how initialization was done, modes are added like this:
-
->>> a_model.add_mode(2, 0)
-
->>> a_model.add_mode(2, 0, 0)  # number of entries must match number of frequencies
-
-TypeError: Number of components in mode does not match number of frequencies.
-
-
+>>> a_model_extended.frequencies = [1.5]
+Traceback (most recent call last):
+    ...
+ValueError: Cannot decrease number of frequencies. Define a new model instead.

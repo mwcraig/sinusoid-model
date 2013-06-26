@@ -107,3 +107,22 @@ class TestSinusoidalModel(object):
             correct_mode = list(old_mode)
             correct_mode.extend([0, 0])
             assert (new_mode == tuple(correct_mode))
+
+    def test_decreasing_number_of_freqs_should_fail(self):
+        from copy import deepcopy
+        model = deepcopy(self.double_model)
+        with pytest.raises(ValueError):
+            model.frequencies = [1.2]
+
+    def test_increasing_frequencies_in_setter_fails(self):
+        from copy import deepcopy
+        model = deepcopy(self.double_model)
+        with pytest.raises(ValueError):
+            model.frequencies = [1, 2, 3]
+
+    def test_changing_frequency_values(self):
+        from copy import deepcopy
+        model = deepcopy(self.double_model)
+        new_freqs = (3, 4)
+        model.frequencies = new_freqs
+        assert (model.frequencies == new_freqs)
