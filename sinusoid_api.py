@@ -61,7 +61,6 @@ ValueError: Wrong number of modes in mode setter for mode [1, 0, 0]
 # in this case all of the modes are simply deleted:
 
 >>> a_model_extended.modes
-
 ()
 
 # TThere is similar behavior if you set the frequencies directly:

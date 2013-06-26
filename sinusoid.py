@@ -117,7 +117,7 @@ class SinusoidModel(object):
         except TypeError:
             self._frequencies = (freq)
 
-    def add_frequency(self, *frequencies):
+    def add_frequency(self, *frequencies, **kwd):
         """
         Add one or more frequencies to model
 
@@ -127,10 +127,25 @@ class SinusoidModel(object):
         frequencies : float
             One or more frequencies to be appended to the model
 
+
         """
         all_frequencies = list(self.frequencies)
         all_frequencies.extend(frequencies)
+
+        extend_modes = kwd.pop('extend_modes', True)
+
+        if not extend_modes:
+            self.modes = []
+            return
+
+        zeros = [0 for frequency in frequencies]
+        modes = []
         self.frequencies = all_frequencies
+        for mode in self.modes:
+            new_mode = list(mode)
+            new_mode.extend(zeros)
+            modes.append(new_mode)
+        self.modes = modes
 
     @property
     def modes(self):

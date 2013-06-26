@@ -53,7 +53,7 @@ class TestSinusoidalModel(object):
         ## make sure it is impossible to change mode defitions.
         model = sinusoid.SinusoidModel(frequencies=self.double_mode['freq'],
                                        modes=self.double_mode['modes'])
-        
+
         assert (model.modes == self.expected_modes)
 
     def test_number_modes_matches_frequencies(self):
@@ -83,3 +83,27 @@ class TestSinusoidalModel(object):
         empty_model.add_mode(modes[0], modes[1], modes[2])
         print empty_model.modes
         assert (empty_model.modes == self.expected_modes)
+
+    def test_adding_frequency_extends_modes(self):
+        from copy import deepcopy
+        model = deepcopy(self.double_model)
+        model.add_frequency(1.8)
+        for new_mode, old_mode in zip(model.modes, self.double_model.modes):
+            correct_mode = list(old_mode)
+            correct_mode.append(0)
+            assert (new_mode == tuple(correct_mode))
+
+    def test_supress_extending_modes_when_adding_freq(self):
+        from copy import deepcopy
+        model = deepcopy(self.double_model)
+        model.add_frequency(1.8, extend_modes=False)
+        assert (model.modes == ())
+
+    def test_adding_several_frequencies_extends_modes(self):
+        from copy import deepcopy
+        model = deepcopy(self.double_model)
+        model.add_frequency(1.8, 4.5)
+        for new_mode, old_mode in zip(model.modes, self.double_model.modes):
+            correct_mode = list(old_mode)
+            correct_mode.extend([0, 0])
+            assert (new_mode == tuple(correct_mode))
