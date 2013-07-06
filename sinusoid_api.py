@@ -56,6 +56,7 @@ ValueError: Wrong number of modes in mode setter for mode [1, 0, 0]
 
 # this behavior can be prevented by setting the appropriate keyword
 
+>>> a_model_extended = copy.deepcopy(a_model)
 >>> a_model_extended.add_frequency(3.4, extend_modes=False)
 
 # in this case all of the modes are simply deleted:
@@ -89,3 +90,21 @@ ValueError: Use method add_frequency to increase the number of frequencies
 Traceback (most recent call last):
     ...
 ValueError: Cannot decrease number of frequencies. Define a new model instead.
+
+#
+#  adding duplicate modes or frequencies.
+#
+
+# an error is generated when trying to add a frequency already in the model.
+
+>>> a_model_extended.frequencies
+(7.8, 3.5)
+>>> a_model_extended.add_frequency(7.8)
+Traceback (most recent call last):
+    ...
+ValueError: The frequencies 7.8 are already in the model
+>>> a_model_extended.frequencies = [7.8, 1.5]
+Traceback (most recent call last):
+    ...
+ValueError: The frequencies 7.8 are already in the model
+    

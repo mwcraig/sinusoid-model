@@ -1,6 +1,7 @@
 import pytest
 import numpy as np
 import sinusoid
+from copy import deepcopy
 
 
 class TestSinusoid(object):
@@ -85,7 +86,6 @@ class TestSinusoidalModel(object):
         assert (empty_model.modes == self.expected_modes)
 
     def test_adding_frequency_extends_modes(self):
-        from copy import deepcopy
         model = deepcopy(self.double_model)
         model.add_frequency(1.8)
         for new_mode, old_mode in zip(model.modes, self.double_model.modes):
@@ -94,13 +94,11 @@ class TestSinusoidalModel(object):
             assert (new_mode == tuple(correct_mode))
 
     def test_supress_extending_modes_when_adding_freq(self):
-        from copy import deepcopy
         model = deepcopy(self.double_model)
         model.add_frequency(1.8, extend_modes=False)
         assert (model.modes == ())
 
     def test_adding_several_frequencies_extends_modes(self):
-        from copy import deepcopy
         model = deepcopy(self.double_model)
         model.add_frequency(1.8, 4.5)
         for new_mode, old_mode in zip(model.modes, self.double_model.modes):
@@ -109,20 +107,30 @@ class TestSinusoidalModel(object):
             assert (new_mode == tuple(correct_mode))
 
     def test_decreasing_number_of_freqs_should_fail(self):
-        from copy import deepcopy
         model = deepcopy(self.double_model)
         with pytest.raises(ValueError):
             model.frequencies = [1.2]
 
     def test_increasing_frequencies_in_setter_fails(self):
-        from copy import deepcopy
         model = deepcopy(self.double_model)
         with pytest.raises(ValueError):
             model.frequencies = [1, 2, 3]
 
     def test_changing_frequency_values(self):
-        from copy import deepcopy
         model = deepcopy(self.double_model)
         new_freqs = (3, 4)
         model.frequencies = new_freqs
         assert (model.frequencies == new_freqs)
+
+    def test_adding_duplicate_frequency_fails(self):
+        model = deepcopy(self.double_model)
+        with pytest.raises(ValueError):
+            model.add_frequency(model.frequencies[0])
+
+    def test_setting_frequencies_with_duplicates_fails(self):
+        model = sinusoid.SinusoidModel()
+        with pytest.raises(ValueError):
+            model.frequencies = [1, 2, 1]
+        model.frequencies = [1, 2]
+        with pytest.raises(ValueError):
+            model.frequencies = [1, 3]

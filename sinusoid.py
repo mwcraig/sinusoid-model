@@ -114,6 +114,12 @@ class SinusoidModel(object):
 
     @frequencies.setter
     def frequencies(self, freq):
+
+        if len(set(freq)) != len(freq):
+            raise ValueError('One or more repeated frequencies provided in input')
+
+        self._validate_frequencies(freq)
+        
         n_new_frequencies = len(freq)
         n_current_frequencies = len(self.frequencies)
 
@@ -144,6 +150,9 @@ class SinusoidModel(object):
             modes by appending zeros. Default is True. If set to False
             current modes are deleted.
         """
+
+        self._validate_frequencies(frequencies)
+
         all_frequencies = list(self.frequencies)
         all_frequencies.extend(frequencies)
 
@@ -161,6 +170,17 @@ class SinusoidModel(object):
             new_mode.extend(zeros)
             modes.append(new_mode)
         self.modes = modes
+
+    def _validate_frequencies(self, new_frequencies):
+        """
+        Check whether new frequencies duplicate any existing frequencies.
+        """
+
+        overlap = set(new_frequencies).intersection(set(self.frequencies))
+        if overlap:
+            bad_frequencies = ', '.join([str(i) for i in overlap])
+            raise ValueError('The frequencies ' + bad_frequencies +
+                             ' are already in the model')
 
     @property
     def modes(self):
