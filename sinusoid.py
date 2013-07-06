@@ -139,7 +139,10 @@ class SinusoidModel(object):
         frequencies : float
             One or more frequencies to be appended to the model
 
-
+        extend_modes : boolean, optional
+            Controls whether adding a frequency automatically extends existing
+            modes by appending zeros. Default is True. If set to False
+            current modes are deleted.
         """
         all_frequencies = list(self.frequencies)
         all_frequencies.extend(frequencies)
