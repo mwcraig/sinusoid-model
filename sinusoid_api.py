@@ -107,4 +107,13 @@ ValueError: The frequencies 7.8 are already in the model
 Traceback (most recent call last):
     ...
 ValueError: The frequencies 7.8 are already in the model
-    
+ 
+ # an error is also generated when trying to add a mode already in the model
+
+>>> a_model_extended.modes
+((1, 0), (0, 1), (1, 1))
+>>> a_model_extended.add_mode(1, 0)
+Traceback (most recent call last):
+    ...
+ValueError: Mode (1, 0) is already in the model; model is unchanged
+

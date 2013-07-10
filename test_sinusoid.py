@@ -134,3 +134,8 @@ class TestSinusoidalModel(object):
         model.frequencies = [1, 2]
         with pytest.raises(ValueError):
             model.frequencies = [1, 3]
+
+    def test_adding_duplicate_mode_fails(self):
+        model = deepcopy(self.double_model)
+        with pytest.raises(ValueError):
+            model.add_mode(model.modes[0])

@@ -195,6 +195,8 @@ class SinusoidModel(object):
             if len(mode) != len(self.frequencies):
                 raise ValueError('Wrong number of modes in mode setter' +
                                  ' for mode {}'.format(mode))
+            if tuple(mode) in self.modes:
+                raise ValueError('Mode {0} is already in the model; model is unchanged'.format(str(tuple(mode))))
             frequency = (np.array(self.frequencies) * np.array(mode)).sum()
             if not (frequency > 0):
                 raise ValueError('Zero frequency mode given.')
