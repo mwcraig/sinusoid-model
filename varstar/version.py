@@ -1,4 +1,4 @@
 from __future__ import (print_function, division, absolute_import,
                         unicode_literals)
 
-from .version import version as __version__
+version = '0.1.0'
