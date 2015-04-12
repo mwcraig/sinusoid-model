@@ -35,10 +35,10 @@ setup(
     cmdclass={'test': PyTest},
     entry_points={
     },
-    classifiers=['Development Status :: 4 - Beta',
+    classifiers=['Development Status :: 3 - Alpha',
                  'License :: OSI Approved :: BSD License',
                  'Programming Language :: Python :: 2.7',
-                 'Programming Language :: Python :: 2 :: Only',
+                 'Programming Language :: Python :: 3',
                  'Intended Audience :: Science/Research',
                  'Topic :: Scientific/Engineering :: Astronomy'],
     )
