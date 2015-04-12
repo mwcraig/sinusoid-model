@@ -1,3 +1,5 @@
+from __future__ import division, print_function, absolute_import, unicode_literals
+
 import numpy as np
 
 
@@ -119,7 +121,7 @@ class SinusoidModel(object):
             raise ValueError('One or more repeated frequencies provided in input')
 
         self._validate_frequencies(freq)
-        
+
         n_new_frequencies = len(freq)
         n_current_frequencies = len(self.frequencies)
 
